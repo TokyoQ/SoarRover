@@ -1,0 +1,14 @@
+source _firstload.soar
+pushd all
+source all_source.soar
+popd
+pushd elaborations
+source elaborations_source.soar
+popd
+source obsolete.soar
+source set-mode.soar
+source initialize-Crawler.soar
+source last-action.soar
+source remove-out.soar
+source travel.soar
+source turn.soar

@@ -1,0 +1,102 @@
+#Propose*travel*forward-slow
+#If in travel mode,
+#Always propose to move slowly, worst pref
+sp {Crawler*propose*travel*forward-slow 
+   (state <s> ^name travel)    
+-->
+   (<s> ^operator <op> + <) #Acceptable and worst
+   (<op> ^name forward
+         ^speed slow)
+}
+sp {apply*travel*forward-slow
+   (state <s> ^operator <op>
+              ^io <io>
+              ^constants <c>)
+   (<io> ^output-link <out>
+         ^input-link.ultrasonic.speedDiff <diff>)
+   (<c>  ^slowSpeed <slow>
+         ^maxRun <run>)
+   (<op> ^name forward
+         ^speed slow)
+-->
+   (<out> ^motors <mot>)
+   (<mot> ^left (- <slow> <diff>)
+          ^right (+ <slow> <diff>)
+          ^time <run>)
+   (write (crlf) |Moving forward - slow|)
+}
+
+#Propose*travel*forward-med
+#If in travel mode and enough room
+#Propose to move forward at medium speed
+sp {Crawler*propose*travel*forward-med
+   (state <s> ^name travel
+              ^io.input-link.ultrasonic <u>
+              ^constants <c>)
+   (<c> ^medFwdThresh <mFT>
+        ^medSideThresh <mST>)
+   (<u> ^forward.range > <mFT>  
+        ^leftFront.range > <mST>
+        ^rightFront.range > <mST>
+        ^leftEdge.range > <mST>
+        ^rightEdge.range > <mST>)
+-->
+   (<s> ^operator <op> +) #Acceptable 
+   (<op> ^name forward
+         ^speed med)
+}
+sp {apply*travel*forward-med
+   (state <s> ^operator <op>
+              ^io <io>
+              ^constants <c>)
+   (<io> ^output-link <out>
+         ^input-link.ultrasonic.speedDiff <diff>)
+   (<c>  ^medSpeed <med>
+         ^maxRun <run>)
+   (<op> ^name forward
+         ^speed med)
+-->
+   (<out> ^motors <mot>)
+   (<mot> ^left (- <med> <diff>)
+          ^right (+ <med> <diff>)
+          ^time <run>)
+   (write (crlf) |Moving forward - Med|)
+}
+
+#Propose*travel*forward-fast
+#If in travel mode and enough room
+#Propose to move forward at fast speed, best pref
+sp {Crawler*propose*travel*forward-fast
+   (state <s> ^name travel
+              ^io.input-link.ultrasonic <u>
+              ^constants <c>)
+   (<c> ^fastFwdThresh <fFT>
+        ^fastSideThresh <fST>)
+   (<u> ^forward.range > <fFT>
+        ^leftFront.range > <fST>
+        ^rightFront.range > <fST>
+        ^leftEdge.range > <fST>
+        ^rightEdge.range > <fST>)
+-->
+   (<s> ^operator <op> + >) #Acceptable and best
+   (<op> ^name forward
+         ^speed fast)
+}
+sp {apply*travel*forward-fast
+   (state <s> ^operator <op>
+              ^io <io>
+              ^constants <c>)
+   (<io> ^output-link <out>
+         ^input-link.ultrasonic.speedDiff <diff>)
+   (<c>  ^fastSpeed <fast>
+         ^maxRun <run>)
+   (<op> ^name forward
+         ^speed fast)
+-->
+   (<out> ^motors <mot>)
+   (<mot> ^left (- <fast> <diff>)
+          ^right (+ <fast> <diff>)
+          ^time <run>)
+   (write (crlf) |Moving forward - fast|)
+}
+

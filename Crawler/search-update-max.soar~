@@ -1,0 +1,79 @@
+#If in search mode, If forward range >= max range,
+#update max range and turn count, keep searching
+sp {Crawler*propose*search-update-max
+   (state <s> ^name Crawler
+              ^mode search
+              ^maxRange <max>
+              ^searchDone false
+              ^io.input-link.ultrasonic <u>)
+   (<u> ^forward.range <fwd> >= <max>)
+-->
+   (<s> ^operator <op> + =)
+   (<op> ^name search-not-max)
+}
+sp {Crawler*apply*search-not-max
+   (state <s> ^operator <op>
+              ^turnCount <turns>
+              ^searchCount <search>
+              ^maxRange <max>
+              ^io.input-link.ultrasonic <u>
+              ^io.output-link <out>
+              ^lastAction <last>)
+   (<op> ^name search-new-max)
+   (<u> ^forward.range <fwd>)
+-->
+   (<s> ^maxRange <max> -)           #update max range        
+   (<s> ^maxRange <fwd>)
+   (<s> ^turnCount <turns> -)        #turnCount=0
+   (<s> ^turnCount 0)
+   (<s> ^searchCount (+ <search> 1)) #searchCount++
+   (<s> ^searchCount <search> -)
+   (<out> ^action <act>)             #keep turning
+   (<act> ^type turn                 
+          ^direction <last>)
+}
+
+#If in search mode, If forward range < max range,
+#add 1 to turn count and keep searching
+sp {Crawler*propose*search-update-max
+   (state <s> ^name Crawler
+              ^mode search
+              ^maxRange <max>
+              ^turnCount <turns>
+              ^searchCount <search>
+              ^searchDone false
+              ^io.input-link.ultrasonic <u>)
+   (<u> ^forward.range <fwd> < <max>)
+-->
+   (<s> ^operator <op> + =)
+   (<op> ^name search-not-max)
+}
+sp {Crawler*apply*search-not-max
+   (state <s> ^operator <op>
+              ^turnCount <turns>
+              ^searchCount <search>
+              ^io.output-link <out>
+              ^lastAction <last>)
+   (<op> ^name search-not-max)
+-->
+   (<s> ^turnCount (+ <turns> 1))    #turnCount++
+   (<s> ^turnCount <turns> -)
+   (<s> ^searchCount (+ <search> 1)) #searchCount++
+   (<s> ^searchCount <search> -)
+   (<out> ^action <act>)             #keep turning
+   (<act> ^type turn                 
+          ^direction <last>)
+}
+
+#If search not done, If searchCount >= maxSearch Count, 
+#Finished searching
+sp {apply*search-finished
+   (state <s> ^mode search
+              ^maxSearchCount <searchMax>
+              ^searchCount <search> >= <searchMax>
+              ^searchDone <sD> false)
+-->
+   (<s> ^searchDone <sD> -)
+   (<s> ^searchDone true)
+}
+

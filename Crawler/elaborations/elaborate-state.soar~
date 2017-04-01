@@ -1,0 +1,21 @@
+sp {elaborate*state*io
+   (state <s> ^superstate.io <io>)
+-->
+   (<s> ^io <io>)
+}
+
+sp {elaborate*state*name
+   (state <s> ^superstate.operator.name <name>)
+-->
+   (<s> ^name <name>)
+}
+
+sp {elaborate*state*constants
+   (state <s> ^superstate.constants <c>
+              ^superstate.variables <v>
+              ^superstate.lastAction <last>)
+-->
+   (<s> ^constants <c>
+        ^variables <v>
+        ^lastAction <last>)
+}

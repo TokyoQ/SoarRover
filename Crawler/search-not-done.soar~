@@ -1,0 +1,92 @@
+##If in search mode, If forward range >= max range,
+##update max range and turn count, keep searching
+#sp {Crawler*propose*search-new-max
+#   (state <s> ^name Crawler
+#              ^mode search
+#              ^io.input-link.ultrasonic <u>
+#              ^constants <c>
+#              ^variables <v>)
+#   (<v> ^maxRange <max>
+#        ^searchDone false)
+#   (<u> ^forward.range <fwd> >= <max>)
+#-->
+#   (<s> ^operator <op> +)
+#   (<op> ^name search-new-max)
+#}
+#sp {Crawler*apply*search-new-max
+#   (state <s> ^operator <op>
+#              ^io.input-link.ultrasonic <u>
+#              ^io.output-link <out>
+#              ^lastAction <last>
+#              ^variables <v>)
+#   (<v> ^turnCount <turns>
+#        ^searchCount <search>
+#        ^maxRange <max>)
+#   (<op> ^name search-new-max)
+#   (<u> ^forward.range <fwd>)
+#-->
+#   (<v> ^maxRange <max> -)           #update max range        
+#   (<v> ^maxRange <fwd>)
+#   (<v> ^turnCount <turns> -)        #turnCount=0
+#   (<v> ^turnCount 0)
+#   (<v> ^searchCount (+ <search> 1)) #searchCount++
+#   (<v> ^searchCount <search> -)
+#   (<out> ^action <act>)             #keep turning
+#   (<act> ^type turn                 
+#          ^direction <last>)
+#   (write (crlf) |New max, continuing search|)
+#}
+#
+##If in search mode, If forward range < max range,
+##add 1 to turn count and keep searching
+#sp {Crawler*propose*search-not-max
+#   (state <s> ^name Crawler
+#              ^mode search
+#              ^variables <v>
+#              ^constants <c>
+#              ^io.input-link.ultrasonic <u>)
+#   (<v> ^maxRange <max>
+#        ^turnCount <turns>
+#        ^searchCount <search>
+#        ^searchDone false)
+#   (<u> ^forward.range <fwd> < <max>)
+#-->
+#   (<s> ^operator <op> +)
+#   (<op> ^name search-not-max)
+#}
+#sp {Crawler*apply*search-not-max
+#   (state <s> ^operator <op>
+#              ^variables <v>
+#              ^constants <c>
+#              ^io.output-link <out>
+#              ^lastAction <last>)
+#   (<v> ^turnCount <turns>
+#        ^searchCount <search>)    
+#   (<op> ^name search-not-max)
+#-->
+#   (<v> ^turnCount (+ <turns> 1))    #turnCount++
+#   (<v> ^turnCount <turns> -)
+#   (<v> ^searchCount (+ <search> 1)) #searchCount++
+#   (<v> ^searchCount <search> -)
+#   (<out> ^action <act>)             #keep turning
+#   (<act> ^type turn                 
+#          ^direction <last>)
+#   (write (crlf) |Continuing search|)
+#}
+#
+##If search not done, If searchCount >= maxSearch Count, 
+##Finished searching
+#sp {apply*search-finished
+#   (state <s> ^mode search
+#              ^variables <v>
+#              ^constants <c>)
+#   (<c> ^maxSearchCount <searchMax>)
+#   (<v> ^searchCount <search> >= <searchMax>
+#        ^searchDone <sD> false)
+#-->
+#   (<v> ^searchDone <sD> -)
+#   (<v> ^searchDone true)
+#   (write (crlf) |Finished Scanning|)
+#}
+#
+#

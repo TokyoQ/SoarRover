@@ -1,0 +1,78 @@
+#Set to travel mode if forward and side sensors detectway is clear
+sp {Crawler*propose*travel
+   (state <s> ^name Crawler
+              ^io.input-link.ultrasonic <u>
+              ^constants <c>)
+   (<c> ^slowFwdThresh <sFT>
+        ^slowSideThresh <sST>)
+   (<u> ^forward.range >= <sFT>
+        ^leftEdge.range >= <sST>
+        ^rightEdge.range >= <sST>
+        ^leftFront.range >= <sST>
+        ^rightFront.range >= <sST>)
+-->
+   (<s> ^operator <op> +)
+   (<op> ^name travel)
+}
+
+#Set to turn mode if forward sensor detects way is blocked
+sp {Crawler*propose*turn1
+   (state <s> ^name Crawler
+              ^io.input-link.ultrasonic <u>
+              ^constants <c>)
+   (<c> ^slowFwdThresh <sFT>)
+   (<u> ^forward.range < <sFT>)
+-->
+   (<s> ^operator <op> + =)
+   (<op> ^name turn)
+}
+
+#Set to turn mode if left edge sensor detects way is blocked
+sp {Crawler*propose*turn2
+   (state <s> ^name Crawler
+              ^io.input-link.ultrasonic <u>
+              ^constants <c>)
+   (<c> ^slowSideThresh <sST>)
+   (<u> ^leftEdge.range < <sST>)
+-->
+   (<s> ^operator <op> + =)
+   (<op> ^name turn)
+}
+
+#Set to turn mode if right edge sensor detects way is blocked
+sp {Crawler*propose*turn3
+   (state <s> ^name Crawler
+              ^io.input-link.ultrasonic <u>
+              ^constants <c>)
+   (<c> ^slowSideThresh <sST>)
+   (<u> ^rightEdge.range < <sST>)
+-->
+   (<s> ^operator <op> + =)
+   (<op> ^name turn)
+}
+
+#Set to turn mode if left front sensor detects way is blocked
+sp {Crawler*propose*turn4
+   (state <s> ^name Crawler
+              ^io.input-link.ultrasonic <u>
+              ^constants <c>)
+   (<c> ^slowSideThresh <sST>)
+   (<u> ^leftFront.range < <sST>)
+-->
+   (<s> ^operator <op> + =)
+   (<op> ^name turn)
+}
+
+
+#Set to turn mode if right front sensor detects way is blocked
+sp {Crawler*propose*turn5
+   (state <s> ^name Crawler
+              ^io.input-link.ultrasonic <u>
+              ^constants <c>)
+   (<c> ^slowSideThresh <sST>)
+   (<u> ^rightFront.range < <sST>)
+-->
+   (<s> ^operator <op> + =)
+   (<op> ^name turn)
+}
+

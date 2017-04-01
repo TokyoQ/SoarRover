@@ -1,0 +1,30 @@
+#Propose*move-forward
+#If Crawler, if forward sensor is clear
+#Propose to move forward as the best option
+
+sp {Crawler*wander*propose*move-forward
+   (state <s> ^name Crawler
+              ^io.input-link.ultrasonic <u>
+              ^fwdThresh <f>
+              ^sideThresh <st>
+              ^mode wander)
+   (<u> ^forward.range >= <f>
+        ^left.range >= <st>
+        ^right.range >= <st>)
+-->
+   (<s> ^operator <op> + > =) #Acceptable and best
+   (<op> ^name move
+         ^direction forward)
+}
+
+sp {apply*wander*move-forward
+   (state <s> ^operator <op>
+              ^io.output-link <out>)
+   (<op> ^name move
+         ^direction forward)
+-->
+   (<out> ^action <act>)
+   (<act> ^type move
+          ^direction forward)
+   (write (crlf) |Moving forward|)
+}

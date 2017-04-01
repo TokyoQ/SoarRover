@@ -1,0 +1,59 @@
+##Prefer moving forward to turning
+#sp {Crawler*compare*operator-preferences
+#   (state <s> ^name Crawler
+#              ^operator <op1> +
+#                        <op2> +)
+#   (<op1> ^name move)
+#   (<op2> ^name turn)
+#-->
+#   (<s> ^operator <op1> > <op2>)
+#}
+#
+##Prefer turning right if has more space
+#sp {Crawler*compare*operator-preferences
+#   (state <s> ^name Crawler
+#              ^operator <op1> +
+#                        <op2> +
+#              ^io.input-link.ultrasonic <u>)
+#   (<u> ^left.range <l>
+#        ^right.range <r> > <l>)
+#   (<op1> ^name turn
+#          ^direction left)
+#   (<op2> ^name turn
+#          ^direction right)
+#-->
+#   (<s> ^operator <op2> > <op1>)
+#}
+#
+##Prefer turning left if has more space
+#sp {Crawler*compare*operator-preferences
+#   (state <s> ^name Crawler
+#              ^operator <op1> +
+#                        <op2> +
+#              ^io.input-link.ultrasonic <u>)
+#   (<u> ^left.range <l>
+#        ^right.range <r> < <l>)
+#   (<op1> ^name turn
+#          ^direction left)
+#   (<op2> ^name turn
+#          ^direction right)
+#-->
+#   (<s> ^operator <op1> > <op2>)
+#}
+
+#If in search mode, If done searching,
+#
+#sp {apply*search-update-max
+#   (state <s> ^mode search
+#              ^searchDone true       #turning back to max direction
+#              ^turnCount <turns> > 0 #turns remaining
+#              ^lastAction <last> left)
+#-->
+#   (<s> ^maxRange <max> -)
+#   (<s> ^maxRange <fwd>)
+#   (<s> ^turnCount <turns> -)
+#   (<s> ^turnCount 0)
+#   (<s> ^searchCount (+ <search> 1))
+#   (<s> ^searchCount <search> -)
+#   (<s> ^turnCount 0)
+#}

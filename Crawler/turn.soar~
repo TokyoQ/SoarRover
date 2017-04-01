@@ -1,0 +1,70 @@
+#Propose*turn-left
+#If in turn mode and didn't just turn right
+#Propose a turn left
+sp {Crawler*propose*turn*left-turn
+   (state <s> ^name turn
+             -^variables.lastAction right)
+-->
+   (<s> ^operator <op> + =)
+   (<op> ^name turn
+         ^dir left)
+}
+sp {apply*turn*left-turn
+   (state <s> ^operator <op>
+              ^io.output-link <out>
+              ^constants <c>)
+   (<c> ^minSpeed <min>
+        ^maxRun <run>)
+   (<op> ^name turn
+         ^dir left)
+-->
+   (<out> ^motors <mot>)
+   (<mot> ^left (* -1 <min>)         #Left backwards, Right forwards
+          ^right <min>
+          ^time <run>)
+   (write (crlf) |Turning left|)
+}
+
+#Propose*right-turn
+#If in turn mode and didn't just turn left
+#Propose a turn left
+sp {Crawler*propose*turn*right-turn
+   (state <s> ^name turn
+             -^variables.lastAction left)
+-->
+   (<s> ^operator <op> + =)
+   (<op> ^name turn
+         ^dir right)
+}
+sp {apply*turn*right-turn
+   (state <s> ^operator <op>
+              ^io.output-link <out>
+              ^constants <c>)
+   (<c> ^minSpeed <min>
+        ^maxRun <run>)
+   (<op> ^name turn
+         ^dir right)
+-->
+   (<out> ^motors <mot>)
+   (<mot> ^left <min>                 #Left forwards, right backwards
+          ^right (* -1 <min>)
+          ^time <run>)
+   (write (crlf) |Turning right|)
+}
+
+#Prefer turning the direction with more space
+sp {Crawler*compare*operator-preferences
+   (state <s> ^name Crawler
+              ^operator <op1> +
+                        <op2> +
+              ^io.input-link.ultrasonic <u>)
+   (<u> ^<dir1>.range <val>
+        ^<dir2>.range <= <val>)
+   (<op1> ^name turn
+          ^dir <dir1>)
+   (<op2> ^name turn
+          ^dir <dir2>)
+-->
+   (<s> ^operator <op1> < <op2>)
+}
+

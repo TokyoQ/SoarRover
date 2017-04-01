@@ -1,0 +1,42 @@
+#Prefer moving forward to turning
+sp {Crawler*compare*operator-preferences
+   (state <s> ^name Crawler
+              ^operator <op1> +
+                        <op2> +)
+   (<op1> ^name move)
+   (<op2> ^name turn)
+-->
+   (<s> ^operator <op1> > <op2>)
+}
+
+#Prefer turning right if has more space
+sp {Crawler*compare*operator-preferences
+   (state <s> ^name Crawler
+              ^operator <op1> +
+                        <op2> +
+              ^io.input-link.ultrasonic <u>)
+   (<u> ^left.range <l>
+        ^right.range <r> > <l>)
+   (<op1> ^name turn
+          ^direction left)
+   (<op2> ^name turn
+          ^direction right)
+-->
+   (<s> ^operator <op2> > <op1>)
+}
+
+#Prefer turning left if has more space
+sp {Crawler*compare*operator-preferences
+   (state <s> ^name Crawler
+              ^operator <op1> +
+                        <op2> +
+              ^io.input-link.ultrasonic <u>)
+   (<u> ^left.range <l>
+        ^right.range <r> < <l>)
+   (<op1> ^name turn
+          ^direction left)
+   (<op2> ^name turn
+          ^direction right)
+-->
+   (<s> ^operator <op1> > <op2>)
+}

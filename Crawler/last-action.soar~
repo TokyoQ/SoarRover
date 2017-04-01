@@ -1,0 +1,43 @@
+# Apply*update*last-action
+# If a forward operator is applied
+# Update the last action
+sp {apply*update*last-action-fwd
+   (state <s> ^operator <op>
+              ^variables <v>)
+   (<v> ^lastAction <last>)
+   (<op> ^name <name> forward
+         ^speed <spd>)
+-->
+   (<v> ^lastAction <last> -)
+   (<v> ^lastAction <name>)
+   (<name> ^speed <spd>)
+}
+
+# Apply*update*last-action
+# If a turn operator is applied
+# Update the last action
+sp {apply*update*last-action-turn
+   (state <s> ^operator <op>
+              ^variables <v>)
+   (<v> ^lastAction <last>)
+   (<op> ^name turn
+         ^dir left)
+-->
+   (<v> ^lastAction <last> -)
+   (<v> ^lastAction left)
+}
+
+
+# Apply*update*last-action
+# If a turn operator is applied
+# Update the last action
+sp {apply*update*last-action-turn
+   (state <s> ^operator <op>
+              ^variables <v>)
+   (<v> ^lastAction <last>)
+   (<op> ^name turn
+         ^dir right)
+-->
+   (<v> ^lastAction <last> -)
+   (<v> ^lastAction right)
+}

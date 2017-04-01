@@ -1,0 +1,9 @@
+sp {apply*remove-out
+   (state <s> ^operator <op>
+              ^io.output-link <out>)
+   (<out> ^motors <mot>)
+   (<mot> ^status complete)
+-->
+   (<out> ^motors <mot> -)
+   (write (crlf) |Output removed|)
+}

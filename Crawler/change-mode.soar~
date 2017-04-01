@@ -1,0 +1,7 @@
+
+#sp {apply*change-mode
+#   (state <s> ^io.input-link.ultrasonic <u>)
+#   (<op> ^name change-mode)
+#-->
+#   (<s>)
+#}

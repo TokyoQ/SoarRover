@@ -1,0 +1,44 @@
+# Apply*update*obtruction
+sp {apply*update*obstruction
+   (state <s> ^io.input-link.ultrasonic <u>
+              ^fwdThresh <f>
+              ^sideThresh <s>)
+   (<u> ^forward.range < <f>)
+-->
+   (<s> ^obstructed <obs> -)
+   (<s> ^obstructed yes)
+}
+
+sp {apply*update*obstruction
+   (state <s> ^io.input-link.ultrasonic <u>
+              ^fwdThresh <f>
+              ^sideThresh <s>)
+   (<u> ^left.range < <s>)
+-->
+   (<s> ^obstructed <obs> -)
+   (<s> ^obstructed yes)
+}
+
+
+sp {apply*update*obstruction
+   (state <s> ^io.input-link.ultrasonic <u>
+              ^fwdThresh <f>
+              ^sideThresh <s>)
+   (<u> ^right.range < <s>)
+-->
+   (<s> ^obstructed <obs> -)
+   (<s> ^obstructed yes)
+}
+
+
+sp {apply*update*obstruction
+   (state <s> ^io.input-link.ultrasonic <u>
+              ^fwdThresh <f>
+              ^sideThresh <s>)
+   (<u> ^forward.range >= <f>
+        ^left.range >= <s>
+        ^right.range >= <s>)
+-->
+   (<s> ^obstructed <obs> -)
+   (<s> ^obstructed no)
+}

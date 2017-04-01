@@ -1,0 +1,17 @@
+#Pass handles of the superstate to the substate
+sp {elaborate*state*handles
+   (state <s> ^superstate.io <io>
+              ^superstate.constants <c>
+              ^superstate.variables <v>)
+-->
+   (<s> ^io <io>
+        ^constants <c>
+        ^variables <v>)
+}
+
+#Give the name of the proposed operator to the substate
+sp {elaborate*state*name
+   (state <s> ^superstate.operator.name <name>)
+-->
+   (<s> ^name <name>)
+}

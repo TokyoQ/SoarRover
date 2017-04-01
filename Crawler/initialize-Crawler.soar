@@ -1,0 +1,47 @@
+sp {propose*initialize-Crawler
+   (state <s> ^superstate nil
+             -^name)
+-->
+   (<s> ^operator <o> +)
+   (<o> ^name initialize-Crawler)
+}
+
+sp {apply*initialize-Crawler
+   (state <s> ^operator <op>)
+   (<op> ^name initialize-Crawler)
+-->
+   (<s> ^name Crawler
+        ^constants <c>
+        ^variables <v>
+        ^directions <dir>)
+
+(<c> ^slowFwdThresh 30   #Define tiers for ultrasonic values
+     ^medFwdThresh 45
+     ^fastFwdThresh 60
+     ^slowSideThresh 25
+     ^medSideThresh 40
+     ^fastSideThresh 55
+     
+     ^minSpeed 90
+     ^slowSpeed 110       #Define PWM speeds to run motors
+     ^medSpeed 140
+     ^fastSpeed 170
+     
+     ^maxRun 650     
+     ^smlRun 110     #Define times to run motors in milliseconds
+     ^medRun 220
+     ^lrgRun 330
+     
+     ^maxSearchCount 4  #No. of search turns to perform before deciding
+                     )
+
+(<v> ^lastAction none
+     ^turnCount 0
+     ^searchCount 0
+     ^maxRange 0
+     ^searchDone false)
+   
+(<dir> ^left.opp right
+       ^right.opp left)
+}
+

@@ -1,0 +1,62 @@
+#Propose*turn-right
+#If Crawler, if forward sensor is blocked
+#Propose a turn right
+sp {Crawler*propose*wander*turn-right
+   (state <s> ^name Crawler
+              ^io.input-link.ultrasonic <u>
+              ^constants <c>
+              ^mode wander
+              ^lastAction <last> <> left)
+   (<c> ^fwdThresh <f>)
+-->
+   (<s> ^operator <op> + =)
+   (<op> ^name turn
+         ^direction right)
+}
+
+sp {apply*wander*turn-right
+   (state <s> ^operator <op>
+              ^io.output-link <out>
+              ^mode <m>)
+   (<op> ^name turn
+         ^direction right)
+-->
+   (<out> ^action <act>)
+   (<s> ^mode <m> -)
+   (<s> ^mode search)
+   (<act> ^type turn
+          ^direction right)
+   (write (crlf) |Turning right|)
+}
+
+#Propose*turn-left
+#If Crawler, if forward sensor is blocked
+#Propose a turn left
+sp {Crawler*propose*wander*turn-left
+   (state <s> ^name Crawler
+              ^io.input-link.ultrasonic <u>
+              ^lastAction <last> <> right
+              ^mode wander
+              ^constants <c>)
+   (<c> ^fwdThresh <f>)
+-->
+   (<s> ^operator <op> + =)
+   (<op> ^name turn
+         ^direction left)
+}
+
+sp {apply*wander*turn-left
+   (state <s> ^operator <op>
+              ^io.output-link <out>
+              ^mode <m>)
+   (<op> ^name turn
+         ^direction left)
+-->
+   (<out> ^action <act>)
+   (<act> ^type turn
+          ^direction left)
+   (<s> ^mode <m> -)
+   (<s> ^mode search)
+   (write (crlf) |Turning left|)
+}
+

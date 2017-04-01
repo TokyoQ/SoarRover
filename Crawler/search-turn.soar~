@@ -1,0 +1,75 @@
+#If search done, If turnCount = 0, 
+#Facing best direction, change to wander mode, reset variables
+sp {apply*search-finished
+   (state <s> ^mode <mode> search
+              ^searchDone <sD> true
+              ^searchCount <search>
+              ^turnCount 0)
+-->
+   (<s> ^searchCount <search> -)
+   (<s> ^searchCount 0)
+   (<s> ^mode <mode> -)
+   (<s> ^mode wander)
+   (<s> ^searchDone <sD> -)
+   (<s> ^searchDone false)
+}
+
+
+#If in search mode, If done searching, if searchCount = 0, turnCount > 0
+#decrement turnCount, keep turning to face best direction
+sp {Crawler*propose*search-return
+   (state <s> ^name Crawler
+              ^mode search
+              ^turnCount <turns> > 0
+              ^searchCount <search> 0
+              ^searchDone true)
+-->
+   (<s> ^operator <op> + =)
+   (<op> ^name search-return)
+}
+sp {Crawler*apply*search-return
+   (state <s> ^operator <op>
+              ^turnCount <turns>
+              ^io.output-link <out>
+              ^lastAction <last>)
+   (<op> ^name search-return)
+-->
+   (<s> ^turnCount (- <turns> 1))    #turnCount--
+   (<s> ^turnCount <turns> -)
+   (<out> ^action <act>)             #keep turning back
+   (<act> ^type turn                 
+          ^direction <last>)
+}
+
+
+
+#If in search mode, If done searching, if searchCount = 0, turnCount > 0
+#decrement turnCount, keep turning to face best direction
+sp {Crawler*propose*search-turnaround
+   (state <s> ^name Crawler
+              ^mode search
+              ^maxSearchCount <maxSearch>
+              ^turnCount <turns> > 0
+              ^searchCount <search> >= <maxSearch>
+              ^searchDone true)
+-->
+   (<s> ^operator <op> + =)
+   (<op> ^name search-turnaround)
+}
+sp {Crawler*apply*search-turnaround
+   (state <s> ^operator <op>
+              ^turnCount <turns>
+              ^searchCount <search>
+              ^io.output-link <out>
+              ^lastAction <last> << left right >>
+              ^directions.<last>.opp <oppLast>)
+   (<op> ^name search-return)
+-->
+   (<s> ^turnCount (- <turns> 1))    #turnCount--
+   (<s> ^turnCount <turns> -)
+   (<s> ^searchCount <search> -)
+   (<s> ^searchCount 0)
+   (<out> ^action <act>)             #turn back in opposite direction
+   (<act> ^type turn                 
+          ^direction <oppLast>)
+}

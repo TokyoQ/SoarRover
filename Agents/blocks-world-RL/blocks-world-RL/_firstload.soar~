@@ -1,0 +1,12 @@
+# Classic 3 block blocks world
+# Formulated for reinforcement learning
+# John E. Laird
+# University of Michigan
+# 2/8/2012
+# Soar version 9.3.2
+# In this formulation, clear is computed as an elaboration
+# (in elaborations/clear). The table is always clear.
+
+## Using just the default RL settings
+rl --set learning on
+indifferent-selection --epsilon-greedy
